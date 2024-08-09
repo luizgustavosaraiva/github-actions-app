@@ -25,7 +25,7 @@ jobs:
                 "tag": "staging",
                 "context": "do-nyc3-staging"
               },
-              ".*": {
+              "testing": {
                 "tag": "testing",
                 "context": "do-nyc1-testing"
               }
