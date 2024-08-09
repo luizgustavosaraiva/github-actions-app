@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Github action app",
-  description: "Github action app",
+  title: "Github action app - Home - ",
+  description: "Github action app - Home - ",
 };
 
 export default function RootLayout({
