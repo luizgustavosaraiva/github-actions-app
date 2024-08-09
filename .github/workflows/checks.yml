@@ -1,0 +1,22 @@
+name: Checks
+
+on: 
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'src/**'
+jobs:
+  code_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Linting
+        run: pnpm lint
