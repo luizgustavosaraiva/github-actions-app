@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  set-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kanga333/variable-mapper@master
+        id: export
+        with:
+          key: "${{ github.event.inputs.environment }}"
+          map: |
+            {
+              "production": {
+                "tag": "latest",
+                "context": "do-nyc3-production"
+              },
+              "staging": {
+                "tag": "staging",
+                "context": "do-nyc3-staging"
+              },
+              ".*": {
+                "tag": "testing",
+                "context": "do-nyc1-testing"
+              }
+            }
+          export_to: env
+  deploy:    
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: |
+          echo "Deploying to ${{ env.environment }} with tag ${{ env.tag }} and kubectl context ${{ env.context }}"

@@ -1,0 +1,19 @@
+name: Base
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente do deploy'
+        required: true
+        default: 'testing'
+        type: choice
+        options:
+        - testing
+        - staging
+        - production
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ github.event.inputs.environment }}
