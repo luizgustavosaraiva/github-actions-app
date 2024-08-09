@@ -1,0 +1,33 @@
+name: Base
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente do deploy'
+        required: true
+        default: 'testing'
+        type: choice
+        options:
+        - testing
+        - staging
+        - production
+      deploy_tag:
+        description: 'Tag do deploy do ambiente'
+        required: true
+        type: string
+      kubectl_context:
+        description: 'Contexto do kubectl'
+        type: string
+        required: true
+jobs:
+  verify:
+    uses: ./.github/workflows/checks.yml
+    with:
+      environment: ${{ inputs.environment }}
+  deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: ${{ inputs.environment }}
+      deploy_tag: ${{ inputs.deploy_tag }}
+      kubectl_context: ${{ inputs.kubectl_context }}
