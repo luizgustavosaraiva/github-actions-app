@@ -12,21 +12,29 @@ jobs:
     name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
     env:
-      TARGET_ENVIRONMET: >
-        ${{ fromJson('{
-          "testing": {
-            "tag": "testing",
-            "context": "do-nyc1-testing"
-          },
-          "staging": {
-            "tag": "staging",
-            "context": "do-nyc3-staging"
-          },
-          "production": {
-            "tag": "latest",
-            "context": "do-nyc3-production"
-        }')[inputs.environment]}}
+      tag:
+      context:
     steps:
+      - uses: kanga333/variable-mapper@master
+        id: export
+        with:
+          key: "${{ inputs.environment }}"
+          map: |
+            {
+              "testing": {
+                "tag": "testing",
+                "context": "do-nyc1-testing"
+              },
+              "staging": {
+                "tag": "staging",
+                "context": "do-nyc3-staging"
+              },
+              "production": {
+                "tag": "latest",
+                "context": "do-nyc3-production"
+              }
+            }
+          export_to: env
       - name: Deploy
         run: |
-          echo "Deploying to ${{ inputs.environment }} with tag ${{ env.TARGET_ENVIRONMET.tag }} and kubectl context ${{ env.TARGET_ENVIRONMET.context }}"
+          echo "Deploying to ${{ inputs.environment }} with tag: ${{env.tag}} and kubectl context: ${{env.context}}"
